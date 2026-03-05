@@ -1,4 +1,17 @@
-from spot_check.checkers import check_broken_links, find_edx_mentions, find_draft_units, find_fbe_gating, find_staff_only_content, check_release_dates, find_date_mentions
+from datetime import datetime
+from spot_check.checkers import (
+    check_broken_links,
+    find_edx_mentions,
+    find_draft_units,
+    find_fbe_gating,
+    find_staff_only_content,
+    check_release_dates,
+    find_date_mentions,
+    find_ora_dates,
+    find_videos,
+    find_discussions_issues,
+    find_course_updates_issues,
+)
 from spot_check.reporters import (
     generate_broken_links_html,
     generate_edx_mentions_html,
@@ -7,6 +20,12 @@ from spot_check.reporters import (
     generate_staff_only_html,
     generate_release_dates_html,
     generate_date_mentions_html,
+    generate_ora_dates_html,
+    generate_videos_html,
+    generate_discussions_html,
+    generate_course_updates_html,
+    generate_membership_roles_html,
+    generate_grading_policy_html,
 )
 
 
@@ -25,6 +44,10 @@ def generate_html_report(course_info, course_dir):
     staff_only_content = find_staff_only_content(course_dir, course_info)
     release_dates_result = check_release_dates(course_dir, course_info)
     date_mentions = find_date_mentions(course_dir, course_info)
+    ora_dates = find_ora_dates(course_dir, course_info)
+    videos = find_videos(course_dir, course_info)
+    discussions_info = find_discussions_issues(course_dir, course_info)
+    course_updates = find_course_updates_issues(course_dir, course_info)
     
     # Generate HTML for each section
     broken_links_html = generate_broken_links_html(broken_links)
@@ -34,6 +57,12 @@ def generate_html_report(course_info, course_dir):
     staff_only_html = generate_staff_only_html(staff_only_content)
     release_dates_html = generate_release_dates_html(release_dates_result, course_info)
     date_mentions_html = generate_date_mentions_html(date_mentions)
+    ora_dates_html = generate_ora_dates_html(ora_dates, course_info)
+    videos_html = generate_videos_html(videos, course_info)
+    discussions_html = generate_discussions_html(discussions_info, course_info)
+    course_updates_html = generate_course_updates_html(course_updates, course_info)
+    membership_roles_html = generate_membership_roles_html(course_info)
+    grading_policy_html = generate_grading_policy_html(course_info)
     
     html = f"""
     <!DOCTYPE html>
@@ -98,8 +127,26 @@ def generate_html_report(course_info, course_dir):
             {draft_units_html}
             {fbe_settings_html}
             {staff_only_html}
+        </div>
+        
+        <div class="content">
+            <h2>Dates</h2>
             {release_dates_html}
             {date_mentions_html}
+            {ora_dates_html}
+        </div>
+        
+        <div class="content">
+            <h2>Video</h2>
+            {videos_html}
+        </div>
+        
+        <div class="content">
+            <h2>Course Settings</h2>
+            {discussions_html}
+            {course_updates_html}
+            {membership_roles_html}
+            {grading_policy_html}
         </div>
     </body>
     </html>
