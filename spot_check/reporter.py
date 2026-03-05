@@ -1,4 +1,4 @@
-from spot_check.checkers import check_broken_links, find_edx_mentions, find_draft_units, find_fbe_gating, find_staff_only_content, check_release_dates
+from spot_check.checkers import check_broken_links, find_edx_mentions, find_draft_units, find_fbe_gating, find_staff_only_content, check_release_dates, find_date_mentions
 from spot_check.reporters import (
     generate_broken_links_html,
     generate_edx_mentions_html,
@@ -6,6 +6,7 @@ from spot_check.reporters import (
     generate_fbe_settings_html,
     generate_staff_only_html,
     generate_release_dates_html,
+    generate_date_mentions_html,
 )
 
 
@@ -23,6 +24,7 @@ def generate_html_report(course_info, course_dir):
     fbe_settings = find_fbe_gating(course_dir, course_info)
     staff_only_content = find_staff_only_content(course_dir, course_info)
     release_dates_result = check_release_dates(course_dir, course_info)
+    date_mentions = find_date_mentions(course_dir, course_info)
     
     # Generate HTML for each section
     broken_links_html = generate_broken_links_html(broken_links)
@@ -31,6 +33,7 @@ def generate_html_report(course_info, course_dir):
     fbe_settings_html = generate_fbe_settings_html(fbe_settings, course_info)
     staff_only_html = generate_staff_only_html(staff_only_content)
     release_dates_html = generate_release_dates_html(release_dates_result, course_info)
+    date_mentions_html = generate_date_mentions_html(date_mentions)
     
     html = f"""
     <!DOCTYPE html>
@@ -96,6 +99,7 @@ def generate_html_report(course_info, course_dir):
             {fbe_settings_html}
             {staff_only_html}
             {release_dates_html}
+            {date_mentions_html}
         </div>
     </body>
     </html>
