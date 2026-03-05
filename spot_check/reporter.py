@@ -1,5 +1,5 @@
 from datetime import datetime
-from spot_check.checkers import check_broken_links, find_edx_mentions, find_draft_units, find_fbe_gating
+from spot_check.checkers import check_broken_links, find_edx_mentions, find_draft_units, find_fbe_gating, find_staff_only_content
 
 def generate_html_report(course_info, course_dir):
     """Generate the HTML report"""
@@ -13,6 +13,7 @@ def generate_html_report(course_info, course_dir):
     edx_mentions = find_edx_mentions(course_dir, course_info)
     draft_units = find_draft_units(course_dir, course_info)
     fbe_settings = find_fbe_gating(course_dir, course_info)
+    staff_only_content = find_staff_only_content(course_dir, course_info)
 
     # Build broken links HTML
     broken_links_html = ""
@@ -130,6 +131,30 @@ def generate_html_report(course_info, course_dir):
     fbe_settings_html += "</div>"
     fbe_settings_html += "</details>"
     
+# Build staff-only content HTML
+    staff_only_html = ""
+    if staff_only_content:
+        staff_only_html += "<h3>Staff-Only Content</h3>"
+        staff_only_html += "<table border='1' style='width:100%; border-collapse:collapse;'>"
+        staff_only_html += "<tr><th>Content Name</th><th>Type</th><th>Studio Link</th></tr>"
+        for item in staff_only_content:
+            item_name = item['name']
+            item_type = item['type'].capitalize()
+            studio_link = item['studio_link']
+            
+            # Create clickable link
+            item_link = f"<a href='{studio_link}' target='_blank'>{item_name}</a>"
+            
+            staff_only_html += "<tr>"
+            staff_only_html += f"<td>{item_link}</td>"
+            staff_only_html += f"<td>{item_type}</td>"
+            staff_only_html += f"<td><a href='{studio_link}' target='_blank'>View in Studio</a></td>"
+            staff_only_html += "</tr>"
+        staff_only_html += "</table>"
+    else:
+        staff_only_html += "<h3>Staff-Only Content</h3>"
+        staff_only_html += "<p>✅ No staff-only content found</p>"
+
     html = f"""
     <!DOCTYPE html>
     <html>
@@ -192,6 +217,7 @@ def generate_html_report(course_info, course_dir):
             {edx_mentions_html}
             {draft_units_html}
             {fbe_settings_html}
+            {staff_only_html}
         </div>
     </body>
     </html>
