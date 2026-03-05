@@ -48,19 +48,27 @@ def find_staff_only_content(course_dir, course_info):
                 # Get the base item type (chapter, sequential, or vertical)
                 base_type = item_type.replace('_draft', '')
                 
-                # Build studio link
-                vertical_info = {
-                    'name': item_name,
-                    'id': item_id,
-                    'is_draft': is_draft
-                }
-                studio_link = build_studio_link(course_info, vertical_info)
+                # Build studio link based on type
+                if base_type in ['chapter', 'sequential']:
+                    # Link to course outline
+                    studio_link = f"https://studio.courses.learn.mit.edu/authoring/course/course-v1:{course_info['org']}+{course_info['course_number']}+{course_info['course_run']}"
+                    link_text = "View in Course Outline"
+                else:  # vertical
+                    # Link to the vertical
+                    vertical_info = {
+                        'name': item_name,
+                        'id': item_id,
+                        'is_draft': is_draft
+                    }
+                    studio_link = build_studio_link(course_info, vertical_info)
+                    link_text = "View in Studio"
                 
                 staff_only_items.append({
                     'name': item_name,
                     'id': item_id,
                     'type': base_type,
-                    'studio_link': studio_link
+                    'studio_link': studio_link,
+                    'link_text': link_text
                 })
                 
                 print(f"DEBUG: Found staff-only {base_type}: {item_name}")

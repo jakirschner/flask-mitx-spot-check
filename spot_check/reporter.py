@@ -141,16 +141,17 @@ def generate_html_report(course_info, course_dir):
             item_name = item['name']
             item_type = item['type'].capitalize()
             studio_link = item['studio_link']
+            link_text = item['link_text']
             
-            # Create clickable link
+            # Create clickable link for item name
             item_link = f"<a href='{studio_link}' target='_blank'>{item_name}</a>"
             
             staff_only_html += "<tr>"
             staff_only_html += f"<td>{item_link}</td>"
             staff_only_html += f"<td>{item_type}</td>"
-            staff_only_html += f"<td><a href='{studio_link}' target='_blank'>View in Studio</a></td>"
+            staff_only_html += f"<td><a href='{studio_link}' target='_blank'>{link_text}</a></td>"
             staff_only_html += "</tr>"
-        staff_only_html += "</table>"
+            staff_only_html += "</table>"
     else:
         staff_only_html += "<h3>Staff-Only Content</h3>"
         staff_only_html += "<p>✅ No staff-only content found</p>"
