@@ -30,7 +30,7 @@ def check_course():
             file.save(tarball_path)
             
             # Extract tarball
-            extract_dir = os.path.join(temp_dir, 'course')
+            extract_dir = temp_dir
             extract_tarball(tarball_path, extract_dir)
             
             # Delete static folder
@@ -39,8 +39,8 @@ def check_course():
             # Parse course info
             course_info = parse_course_info(extract_dir)
             
-            # Generate HTML report
-            html_content = generate_html_report(course_info)
+            # Generate HTML report (pass extract_dir so it can run checks)
+            html_content = generate_html_report(course_info, extract_dir)
             
             # Save to temporary file for download
             output_path = os.path.join(temp_dir, 'report.html')
