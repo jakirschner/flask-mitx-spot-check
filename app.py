@@ -39,19 +39,35 @@ def check_course():
             # Parse course info
             course_info = parse_course_info(extract_dir)
             
-            # Generate HTML report (pass extract_dir so it can run checks)
+            # Generate HTML report
             html_content = generate_html_report(course_info, extract_dir)
+            
+            # Generate filename: [course_number]+[course_run]_spotcheck.html
+            course_number = course_info.get('course_number', 'unknown')
+            course_run = course_info.get('course_run', 'unknown')
+            filename = f"{course_number}+{course_run}_spotcheck.html"
             
             # Save to temporary file for download
             output_path = os.path.join(temp_dir, 'report.html')
-            with open(output_path, 'w') as f:
+            with open(output_path, 'w', encoding='utf-8') as f:
                 f.write(html_content)
             
-            # Send file
-            return send_file(output_path, as_attachment=True, download_name='spot_check_report.html')
+            # Send file with proper filename and custom header
+            response = send_file(
+                output_path,
+                mimetype='text/html',
+                as_attachment=True,
+                download_name=filename
+            )
+            
+            # Add custom header for JavaScript to read
+            response.headers['X-Filename'] = filename
+            
+            return response
     
     except Exception as e:
-        return f"Error: {str(e)}", 500
+        print(f"Error: {str(e)}")
+        return f"Error processing course: {str(e)}", 500
 
 if __name__ == '__main__':
     app.run(debug=True)

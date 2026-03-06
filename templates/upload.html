@@ -1,46 +1,412 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>MITx Spot Check Tool</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIT Learn Course Spot Check Tool</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 50px auto;
+            background-color: #f5f5f5;
             padding: 20px;
         }
-        h1 {
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background-color: white;
+            padding: 30px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .content h2 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .content p {
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        
+        .content ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .content li {
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 8px;
+        }
+        
+        .warning {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 3px;
+        }
+        
+        .warning p {
+            color: #856404;
+            margin: 0;
+        }
+        
+        .upload-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .upload-section h3 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
             color: #333;
         }
-        .upload-form {
+        
+        .form-group input[type="file"] {
+            padding: 8px;
             border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 5px;
+            border-radius: 3px;
+            width: 100%;
         }
-        input[type="file"] {
-            margin: 10px 0;
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
         }
-        button {
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 3px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:focus-visible {
+            outline: 2px solid #0066cc;
+            outline-offset: 2px;
+        }
+        
+        .btn-primary {
             background-color: #a31f34;
             color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            flex: 1;
         }
-        button:hover {
+        
+        .btn-primary:hover {
             background-color: #7a1729;
+        }
+        
+        .btn-secondary {
+            background-color: #0066cc;
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #0052a3;
+        }
+        
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .status-container {
+            display: none;
+            background-color: #e8f4f8;
+            border-left: 4px solid #0066cc;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 3px;
+        }
+        
+        .status-container h4 {
+            color: #0066cc;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .status-message {
+            color: #333;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #0066cc;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .results-container {
+            display: none;
+            background-color: white;
+            padding: 30px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .results-container h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .results-container p {
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        .results-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            border-left: 4px solid #c41e3a;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 3px;
+        }
+        
+        .error p {
+            color: #721c24;
+            margin: 0;
         }
     </style>
 </head>
 <body>
-    <h1>MITx Course Spot Check Tool</h1>
-    <div class="upload-form">
-        <p>Upload a course tarball to generate a spot check report.</p>
-        <form method="POST" action="/check" enctype="multipart/form-data">
-            <input type="file" name="tarball" accept=".tar.gz" required>
-            <button type="submit">Upload & Check</button>
-        </form>
+    <div class="container">
+        <div class="header">
+            <h1>MIT Learn Course Spot Check Tool</h1>
+            <p>Automated course quality checks for MITx Online</p>
+        </div>
+        
+        <div class="content">
+            <h2>What This Tool Does</h2>
+            <p>This tool checks your course for common mistakes in settings and content. However, it cannot replace beta testing for a thorough test of your course material, or a pair of human eyes to make sure that everything is set as you need it to be.</p>
+            
+            <h2>How to Use</h2>
+            <ol>
+                <li>Navigate to your course in Studio</li>
+                <li>Go to "Tools" and click "Export"</li>
+                <li>Download the tarball file to your computer</li>
+                <li>Upload the file using the form below</li>
+                <li>Wait for processing to complete (may take 5+ minutes for larger courses)</li>
+            </ol>
+            
+            <div class="warning">
+                <p><strong>⏱️ Processing Time:</strong> Processing files may take at least 5 minutes, longer for larger courses. Please be patient while your course is being analyzed.</p>
+            </div>
+        </div>
+        
+        <div class="upload-section">
+            <h3>Upload Your Course Tarball</h3>
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label for="tarball">Select Course Tarball (.tar.gz):</label>
+                    <input type="file" id="tarball" name="tarball" accept=".tar.gz" required>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary" id="uploadBtn">Upload & Check Course</button>
+                </div>
+            </form>
+            
+            <div class="status-container" id="statusContainer">
+                <h4><span class="spinner"></span>Processing Your Course</h4>
+                <div class="status-message" id="statusMessage">
+                    Extracting course files...
+                </div>
+            </div>
+            
+            <div class="error" id="errorContainer" style="display: none;">
+                <p id="errorMessage"></p>
+            </div>
+            
+            <div class="results-container" id="resultsContainer">
+                <h3>✅ Analysis Complete!</h3>
+                <p>Your course spot check report has been generated.</p>
+                <div class="results-buttons">
+                    <button class="btn btn-secondary" id="viewBtn">📖 View Results</button>
+                    <button class="btn btn-secondary" id="downloadBtn">💾 Download Results</button>
+                </div>
+            </div>
+        </div>
     </div>
+    
+    <script>
+        let reportUrl = null;
+        let reportFilename = null;
+        
+        const statusMessages = [
+            "Extracting course files...",
+            "Parsing course structure...",
+            "Checking for broken links...",
+            "Scanning for edX mentions...",
+            "Checking video properties...",
+            "Analyzing course dates...",
+            "Checking course settings...",
+            "Generating report...",
+            "Finalizing results..."
+        ];
+        
+        let messageIndex = 0;
+        let messageInterval = null;
+        
+        function updateStatus() {
+            const statusMsg = document.getElementById('statusMessage');
+            if (messageIndex < statusMessages.length) {
+                statusMsg.textContent = statusMessages[messageIndex];
+                messageIndex++;
+            } else {
+                messageIndex = 0;
+            }
+        }
+        
+        document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('tarball');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showError('Please select a file');
+                return;
+            }
+            
+            // Reset UI
+            document.getElementById('errorContainer').style.display = 'none';
+            document.getElementById('resultsContainer').style.display = 'none';
+            document.getElementById('statusContainer').style.display = 'block';
+            document.getElementById('uploadBtn').disabled = true;
+            
+            // Start status updates
+            messageIndex = 0;
+            updateStatus();
+            messageInterval = setInterval(updateStatus, 3000);
+            
+            // Prepare form data
+            const formData = new FormData();
+            formData.append('tarball', file);
+            
+            try {
+                const response = await fetch('/check', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Upload failed with status ${response.status}`);
+                }
+                
+                // Get the blob and create object URL
+                const blob = await response.blob();
+                reportUrl = URL.createObjectURL(blob);
+                
+                // Get filename from custom header
+                reportFilename = response.headers.get('X-Filename') || 'spot_check_report.html';
+                
+                // Show results
+                clearInterval(messageInterval);
+                document.getElementById('statusContainer').style.display = 'none';
+                document.getElementById('resultsContainer').style.display = 'block';
+                document.getElementById('uploadBtn').disabled = false;
+                
+            } catch (error) {
+                clearInterval(messageInterval);
+                showError(`Error: ${error.message}`);
+                document.getElementById('statusContainer').style.display = 'none';
+                document.getElementById('uploadBtn').disabled = false;
+            }
+        });
+        
+        document.getElementById('viewBtn').addEventListener('click', function() {
+            if (reportUrl) {
+                window.open(reportUrl, '_blank');
+            }
+        });
+        
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            if (reportUrl && reportFilename) {
+                const a = document.createElement('a');
+                a.href = reportUrl;
+                a.download = reportFilename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+        });
+        
+        function showError(message) {
+            const errorContainer = document.getElementById('errorContainer');
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorContainer.style.display = 'block';
+            clearInterval(messageInterval);
+            document.getElementById('statusContainer').style.display = 'none';
+            document.getElementById('uploadBtn').disabled = false;
+        }
+    </script>
 </body>
 </html>
