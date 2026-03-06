@@ -7,6 +7,7 @@ def generate_draft_units_html(draft_units):
     
     if draft_units:
         draft_units_html += "<h3>⚠️ Units in Draft</h3>"
+        draft_units_html += "<p>Units that are in draft are units where changes have been made but were not published. Learners will not see these changes when the course opens. Please be sure you check your work on each of these units and publish the changes.</p>"
         draft_units_html += "<table border='1' style='width:100%; border-collapse:collapse;'>"
         draft_units_html += "<thead><tr><th scope='col'>Unit Name</th></tr></thead>"
         draft_units_html += "<tbody>"

@@ -7,6 +7,7 @@ def generate_staff_only_html(staff_only_content):
     
     if staff_only_content:
         staff_only_html += "<h3>Staff-Only Content</h3>"
+        staff_only_html += "<p>Staff-only content is content which has been hidden entirely from learners. This may be intentional; this report flags any areas which are currently listed as Staff-Only so you can review them and be sure it is the setting you want.</p>"
         staff_only_html += "<table border='1' style='width:100%; border-collapse:collapse;'>"
         staff_only_html += "<thead><tr><th scope='col'>Content Name</th><th scope='col'>Type</th><th scope='col'>Studio Link</th></tr></thead>"
         staff_only_html += "<tbody>"

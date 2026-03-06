@@ -16,6 +16,7 @@ def generate_discussions_html(discussions_info, course_info):
         status_color = "orange"
     
     discussions_html += f"<h3>{icon} Discussions: {status_text}</h3>"
+    discussions_html += "<p></p>"
     
     # If there are issues, show them with instructions
     if discussions_info['flags']:

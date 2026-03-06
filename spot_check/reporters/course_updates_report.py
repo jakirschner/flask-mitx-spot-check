@@ -29,6 +29,8 @@ def generate_course_updates_html(updates_issues, course_info):
         updates_html += "</ul>"
     else:
         updates_html += "<h3>Course Updates</h3>"
+        updates_html += "<p>If you have used course updates for previous runs of your course, they will be held over into this current run of your course. You will also need to check the text of your updates to be sure that any dates mentioned are in line with the current course run.</p>"
+        updates_html += "<p>Only the update with the latest date will show up on the outline for learners.</p>"
         
         # Build course updates link
         course_key = f"course-v1:{course_info['org']}+{course_info['course_number']}+{course_info['course_run']}"

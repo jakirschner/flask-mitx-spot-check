@@ -7,6 +7,7 @@ def generate_edx_mentions_html(edx_mentions):
     
     if edx_mentions:
         edx_mentions_html += "<h3>⚠️ edX Mentions</h3>"
+        edx_mentions_html += "<p>Courses moved over from edX may have old mentions of the edX platform. This report highlights these mentions for correction in case they cause confusion for learners.</p>"
         edx_mentions_html += "<table border='1' style='width:100%; border-collapse:collapse;'>"
         edx_mentions_html += "<thead><tr><th scope='col'>Unit</th><th scope='col'>Context</th></tr></thead>"
         edx_mentions_html += "<tbody>"

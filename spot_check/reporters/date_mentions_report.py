@@ -7,6 +7,7 @@ def generate_date_mentions_html(date_mentions):
     
     if date_mentions:
         date_mentions_html += "<h3>⚠️ Date Mentions in Text</h3>"
+        date_mentions_html += "<p>This report looks for any written mentions of dates in your course and flags them if they fall outside the dates of your course run. This tool is intended to help with mentions of dates which should be updated with each course run, but obviously will also flag dates which are references to historic events. Please review the dates that appear here and make sure there is nothing which needs to be changed.<p>"
         date_mentions_html += "<table border='1' style='width:100%; border-collapse:collapse;'>"
         date_mentions_html += "<thead><tr><th scope='col'>Unit</th><th scope='col'>Date & Context</th></tr></thead>"
         date_mentions_html += "<tbody>"

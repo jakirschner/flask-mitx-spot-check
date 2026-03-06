@@ -8,7 +8,9 @@ def generate_fbe_settings_html(fbe_settings, course_info):
     has_verified = fbe_settings.get('has_verified_restriction', False)
     
     if gated_units:
-        fbe_settings_html += "<h3>FBE Settings (Course Gating)</h3>"
+        fbe_settings_html += "<h3>Featured-Based Enrollment (FBE) Settings</h3>"
+        fbe_settings_html += "<p>FBE settings dictate what parts of your course are open to which sets of learners. Genearlly, courses are expected to have formative assessments (knowledge checks, homework assignments, etc.) available to all learners and summative assessments (mid-term exams, finals, etc.) restricted to certificate-earning (verified) learners only.</p>"
+        fbe_settings_html += "<p>If your course does not have any sections which are only available to verified learners, it will show up as a flag below.</p>"
         fbe_settings_html += "<table border='1' style='width:100%; border-collapse:collapse;'>"
         fbe_settings_html += "<thead><tr><th scope='col'>Unit Name</th><th scope='col'>Restriction Type</th><th scope='col'>Studio Link</th></tr></thead>"
         fbe_settings_html += "<tbody>"

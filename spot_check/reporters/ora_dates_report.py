@@ -25,7 +25,8 @@ def generate_ora_dates_html(oras, course_info):
         has_critical = any(any(flag[1] == '❌' for flag in ora['flags']) for ora in oras)
         icon = "❌" if has_critical else "⚠️"
         
-        ora_html += f"<h3>{icon} ORA Step Dates</h3>"
+        ora_html += f"<h3>{icon} Open Response Assessment (ORA) Step Dates</h3>"
+        ora_html += "<p>If you are using ORAs in your course, this report will look at the schedule of the different steps (e.g.: submission due dates. etc.). It will particularly flag if the dates for that step are outside the run of your course.</p>"
         
         # Link to ORA section + toggle instructions
         ora_html += "<p><a href='https://studio.courses.learn.mit.edu/authoring/course/course-v1:" + course_info['org'] + "+" + course_info['course_number'] + "+" + course_info['course_run'] + "' target='_blank'>Link to ORA Units</a></p>"

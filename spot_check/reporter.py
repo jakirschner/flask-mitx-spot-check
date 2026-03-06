@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from spot_check.checkers import (
     check_broken_links,
     find_edx_mentions,
@@ -38,12 +38,19 @@ def count_issues(data):
     return 0
 
 
+def get_utc_timestamp():
+    """Get current UTC timestamp in human-readable format"""
+    now = datetime.now(timezone.utc)
+    return now.strftime('%B %d, %Y at %I:%M %p UTC')
+
+
 def generate_html_report(course_info, course_dir):
     """Generate the HTML report"""
     
     # Format dates
     start_date = format_date(course_info.get('start_date', 'Unknown'))
     end_date = format_date(course_info.get('end_date', 'Unknown'))
+    report_timestamp = get_utc_timestamp()
     
     # Run all checks
     broken_links = check_broken_links(course_dir, course_info)
@@ -128,7 +135,7 @@ def generate_html_report(course_info, course_dir):
             
             .course-info {{
                 font-size: 14px;
-                color: #666;
+                color: #333;
                 line-height: 1.5;
             }}
             
@@ -418,11 +425,15 @@ def generate_html_report(course_info, course_dir):
             <div class="course-info">
                 <strong>Course Number:</strong> {course_info.get('course_number', 'Unknown')}<br/>
                 <strong>Course Run:</strong> {course_info.get('course_run', 'Unknown')}<br/>
-                <strong>Course Dates:</strong> {start_date} - {end_date}
+                <strong>Course Dates:</strong> {start_date} - {end_date}<br/>
+                <strong>Report Generated:</strong> {report_timestamp}
             </div>
         </div>
         
         <div class="tabs" role="tablist">
+            <button class="tab-button" role="tab" aria-selected="false" aria-controls="always-check" onclick="openTab(event, 'always-check')">
+                Always Check These!
+            </button>
             <button class="tab-button" role="tab" aria-selected="false" aria-controls="content" onclick="openTab(event, 'content')">
                 Course Content
                 {content_badge}
@@ -440,6 +451,16 @@ def generate_html_report(course_info, course_dir):
                 {settings_badge}
             </button>
         </div>
+        
+        <section id="always-check" class="tab-content" role="tabpanel" aria-labelledby="always-check-tab">
+            <h2><strong>Always Check These!</strong></h2>
+            <div class="checker-section">
+                {membership_roles_html}
+            </div>
+            <div class="checker-section">
+                {grading_policy_html}
+            </div>
+        </section>
         
         <section id="content" class="tab-content" role="tabpanel" aria-labelledby="content-tab">
             <h2>Course Content</h2>
@@ -487,12 +508,6 @@ def generate_html_report(course_info, course_dir):
             </div>
             <div class="checker-section">
                 {course_updates_html}
-            </div>
-            <div class="checker-section">
-                {membership_roles_html}
-            </div>
-            <div class="checker-section">
-                {grading_policy_html}
             </div>
         </section>
     </body>

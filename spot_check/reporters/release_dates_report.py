@@ -11,6 +11,8 @@ def generate_release_dates_html(release_dates_result, course_info):
         return ""
     
     release_dates_html += "<h3>❌ Release Dates</h3>"
+    release_dates_html += "<p>This report checks release dates on sections and subsections. It will report if a date falls outside the time of your course run.</p>"
+    release_dates_html += "<p>However, it is always good practice for you to go through each of your release dates and be sure that they are set correctly.</p>"
     
     # Link to course outline
     course_outline_link = f"https://studio.courses.learn.mit.edu/authoring/course/course-v1:{course_info['org']}+{course_info['course_number']}+{course_info['course_run']}"

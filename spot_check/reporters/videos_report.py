@@ -32,6 +32,8 @@ def generate_videos_html(videos, course_info):
         icon = "❌" if has_critical else "⚠️"
         
         videos_html += f"<h3>{icon} Videos</h3>"
+        videos_html += "<p>In order to be as accessible as possible, all videos must be downloadable. Additionally, transcripts should be available for every video, and should also be downloadable.</p>"
+        videos_html += "<p>Videos that primarily rely on YouTube may not be available to all learners. YouTube is blocked in different countries, and may also be restricted in educational settings or businesses. If possible, consider adding these videos through the <a href=\"https://docs.google.com/document/d/1bRIO2Xb6rBBUROj9CyZdc6Qle9CrNRtZ9nyCt9pJYrI/edit?usp=sharing\" target=\"_blank\" rel=\"noopener noreferrer\">Video Upload Process for MIT Learn</a>.</p>"
         
         # Create table with columns for each issue type
         videos_html += "<table border='1' style='width:100%; border-collapse:collapse;'>"

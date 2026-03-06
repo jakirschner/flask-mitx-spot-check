@@ -42,10 +42,12 @@ def check_course():
             # Generate HTML report
             html_content = generate_html_report(course_info, extract_dir)
             
-            # Generate filename: [course_number]+[course_run]_spotcheck.html
+            # Generate filename: [course_number]+[course_run]_spotcheck_YYYYMMDD_HHMMSS.html
+            from datetime import datetime, timezone
             course_number = course_info.get('course_number', 'unknown')
             course_run = course_info.get('course_run', 'unknown')
-            filename = f"{course_number}+{course_run}_spotcheck.html"
+            timestamp = datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')
+            filename = f"{course_number}+{course_run}_spotcheck_{timestamp}.html"
             
             # Save to temporary file for download
             output_path = os.path.join(temp_dir, 'report.html')
