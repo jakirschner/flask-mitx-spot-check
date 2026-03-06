@@ -54,8 +54,8 @@ def find_external_links(course_dir):
                         'url': href,
                         'link_text': link_text if link_text else href,
                         'html_file': filename,
-                        'full_content': content,
-                        'a_tag': a_tag
+                        'filepath': filepath,
+                        'content': content
                     })
             
             # Find all iframes (except Qualtrics)
@@ -75,7 +75,8 @@ def find_external_links(course_dir):
                         'url': src,
                         'link_text': '[iframe]',
                         'html_file': filename,
-                        'full_content': content,
+                        'filepath': filepath,
+                        'content': content,
                         'type': 'iframe'
                     })
         
@@ -140,7 +141,7 @@ def check_broken_links(course_dir, course_info):
             
             # Get context
             context = get_link_context(
-                link_info['full_content'],
+                link_info['content'],
                 link_info['link_text'],
                 url
             )
