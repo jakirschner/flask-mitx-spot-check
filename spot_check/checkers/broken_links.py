@@ -92,7 +92,7 @@ def check_link_status(url, timeout=5):
     Returns a dict with status, code, and reason.
     """
     try:
-        response = requests.head(url, timeout=timeout, allow_redirects=False)
+        response = requests.head(url, allow_redirects=False, timeout=timeout)
         
         # Determine if broken
         if response.status_code == 404:
