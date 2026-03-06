@@ -1,6 +1,7 @@
 def generate_release_dates_html(release_dates_result, course_info):
     """
     Generate HTML for release dates section.
+    Shows flagged release dates that are outside the course date range.
     """
     release_dates_html = ""
     
@@ -9,7 +10,6 @@ def generate_release_dates_html(release_dates_result, course_info):
         print("DEBUG: Skipping release dates report for self-paced course")
         return ""
     
-    release_dates_html += "<h2>Dates</h2>"
     release_dates_html += "<h3>❌ Release Dates</h3>"
     
     # Link to course outline
@@ -35,14 +35,17 @@ def generate_release_dates_html(release_dates_result, course_info):
     
     if flagged_dates:
         release_dates_html += "<table border='1' style='width:100%; border-collapse:collapse;'>"
-        release_dates_html += "<tr><th>Section/Subsection Name</th><th>Release Date</th><th>Issue</th></tr>"
+        release_dates_html += "<thead><tr><th scope='col'>Section/Subsection Name</th><th scope='col'>Release Date</th><th scope='col'>Issue</th></tr></thead>"
+        release_dates_html += "<tbody>"
+        
         for date_item in flagged_dates:
             release_dates_html += "<tr>"
             release_dates_html += f"<td>{date_item['name']}</td>"
             release_dates_html += f"<td>{date_item['release_date']}</td>"
             release_dates_html += f"<td>{date_item['reason']}</td>"
             release_dates_html += "</tr>"
-        release_dates_html += "</table>"
+        
+        release_dates_html += "</tbody></table>"
     else:
         release_dates_html += "<p>✅ Please check all your course release dates for accuracy.</p>"
     

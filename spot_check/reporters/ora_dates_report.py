@@ -16,6 +16,7 @@ def build_ora_studio_link(course_info, ora_info):
 def generate_ora_dates_html(oras, course_info):
     """
     Generate HTML for ORA step dates section.
+    Shows ORA components with their step dates and any flags.
     """
     ora_html = ""
     
@@ -64,7 +65,8 @@ def generate_ora_dates_html(oras, course_info):
             # Dates table
             if ora['dates']:
                 ora_html += "<table border='1' style='width:100%; border-collapse:collapse;'>"
-                ora_html += "<tr><th>Step</th><th>Date</th></tr>"
+                ora_html += "<thead><tr><th scope='col'>Step</th><th scope='col'>Date</th></tr></thead>"
+                ora_html += "<tbody>"
                 
                 step_order = ['Response Start', 'Response End', 'Peer Start', 'Peer End']
                 for step in step_order:
@@ -77,7 +79,7 @@ def generate_ora_dates_html(oras, course_info):
                                 break
                         ora_html += f"<tr><td>{step}{flag_icon}</td><td>{date_value}</td></tr>"
                 
-                ora_html += "</table><br/>"
+                ora_html += "</tbody></table><br/>"
         
         # Grading config note if any issues
         for ora in oras:

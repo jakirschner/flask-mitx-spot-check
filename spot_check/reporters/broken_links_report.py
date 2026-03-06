@@ -1,17 +1,22 @@
 def generate_broken_links_html(broken_links):
     """
     Generate HTML for broken links section.
+    Shows links in context with link text bolded within the sentence.
     """
     broken_links_html = ""
+    
     if broken_links:
         broken_links_html += "<h3>⚠️ Broken Links</h3>"
         broken_links_html += "<table border='1' style='width:100%; border-collapse:collapse;'>"
-        broken_links_html += "<tr><th>Unit</th><th>Link Text & Context</th><th>Status</th></tr>"
+        broken_links_html += "<thead><tr><th scope='col'>Unit</th><th scope='col'>Link Text in Context</th><th scope='col'>Status</th></tr></thead>"
+        broken_links_html += "<tbody>"
+        
         for link in broken_links:
             context = link.get('context', 'N/A')
             status = link['status']['reason']
             vertical_name = link['vertical_info']['name'] if link['vertical_info'] else 'Unknown'
             studio_link = link['studio_link']
+            link_text = link['link_text']
             
             # Create clickable link if we have a studio link
             if studio_link:
@@ -19,12 +24,16 @@ def generate_broken_links_html(broken_links):
             else:
                 unit_link = vertical_name
             
+            # Bold the link text within the context
+            context_with_bold = context.replace(link_text, f"<strong>{link_text}</strong>", 1)
+            
             broken_links_html += "<tr>"
             broken_links_html += f"<td>{unit_link}</td>"
-            broken_links_html += f"<td><strong>{link['link_text']}</strong><br/><em style='color: #666;'>{context}</em></td>"
+            broken_links_html += f"<td><em style='color: #333;'>{context_with_bold}</em></td>"
             broken_links_html += f"<td>{status}</td>"
             broken_links_html += "</tr>"
-        broken_links_html += "</table>"
+        
+        broken_links_html += "</tbody></table>"
     else:
         broken_links_html += "<p>✅ No broken links found</p>"
     

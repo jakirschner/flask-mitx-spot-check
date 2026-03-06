@@ -35,7 +35,8 @@ def generate_videos_html(videos, course_info):
         
         # Create table with columns for each issue type
         videos_html += "<table border='1' style='width:100%; border-collapse:collapse;'>"
-        videos_html += "<tr><th>Video Name</th><th>Not Downloadable</th><th>No Transcripts</th><th>No Downloadable Transcripts</th><th>YouTube Link</th><th>edX Link</th></tr>"
+        videos_html += "<thead><tr><th scope='col'>Video Name</th><th scope='col'>Not Downloadable</th><th scope='col'>No Transcripts</th><th scope='col'>No Downloadable Transcripts</th><th scope='col'>YouTube Link</th><th scope='col'>edX Link</th></tr></thead>"
+        videos_html += "<tbody>"
         
         for video in videos:
             studio_link = build_video_studio_link(course_info, video)
@@ -74,7 +75,7 @@ def generate_videos_html(videos, course_info):
             videos_html += f"<td>{edx_link}</td>"
             videos_html += f"</tr>"
         
-        videos_html += "</table>"
+        videos_html += "</tbody></table>"
     else:
         videos_html += "<h3>Videos</h3>"
         videos_html += "<p>✅ No video issues found</p>"

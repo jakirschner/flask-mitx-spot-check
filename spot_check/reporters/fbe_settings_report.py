@@ -1,6 +1,7 @@
 def generate_fbe_settings_html(fbe_settings, course_info):
     """
     Generate HTML for FBE settings (course gating) section.
+    Shows gated units and their restriction types.
     """
     fbe_settings_html = ""
     gated_units = fbe_settings.get('gated_units', [])
@@ -9,7 +10,9 @@ def generate_fbe_settings_html(fbe_settings, course_info):
     if gated_units:
         fbe_settings_html += "<h3>FBE Settings (Course Gating)</h3>"
         fbe_settings_html += "<table border='1' style='width:100%; border-collapse:collapse;'>"
-        fbe_settings_html += "<tr><th>Unit Name</th><th>Restriction Type</th><th>Studio Link</th></tr>"
+        fbe_settings_html += "<thead><tr><th scope='col'>Unit Name</th><th scope='col'>Restriction Type</th><th scope='col'>Studio Link</th></tr></thead>"
+        fbe_settings_html += "<tbody>"
+        
         for unit in gated_units:
             unit_name = unit['name']
             restriction_type = unit['restriction_type']
@@ -23,7 +26,8 @@ def generate_fbe_settings_html(fbe_settings, course_info):
             fbe_settings_html += f"<td>{restriction_type}</td>"
             fbe_settings_html += f"<td>{unit_link}</td>"
             fbe_settings_html += "</tr>"
-        fbe_settings_html += "</table>"
+        
+        fbe_settings_html += "</tbody></table>"
     else:
         fbe_settings_html += "<h3>FBE Settings (Course Gating)</h3>"
         fbe_settings_html += "<p>⚠️ None of your content is restricted to verified learners. Please double check that you are following your Featured Based Enrollment (FBE) requirements. (Contact your PA for more information).</p>"

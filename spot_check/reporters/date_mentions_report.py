@@ -1,13 +1,16 @@
 def generate_date_mentions_html(date_mentions):
     """
     Generate HTML for date mentions in text section.
+    Shows dates found in text with date bolded within the context sentence.
     """
     date_mentions_html = ""
     
     if date_mentions:
         date_mentions_html += "<h3>⚠️ Date Mentions in Text</h3>"
         date_mentions_html += "<table border='1' style='width:100%; border-collapse:collapse;'>"
-        date_mentions_html += "<tr><th>Unit</th><th>Date & Context</th></tr>"
+        date_mentions_html += "<thead><tr><th scope='col'>Unit</th><th scope='col'>Date & Context</th></tr></thead>"
+        date_mentions_html += "<tbody>"
+        
         for mention in date_mentions:
             vertical_name = mention['vertical_info']['name'] if mention['vertical_info'] else 'Unknown'
             studio_link = mention['studio_link']
@@ -20,11 +23,15 @@ def generate_date_mentions_html(date_mentions):
             else:
                 unit_link = vertical_name
             
+            # Bold the date within the context
+            context_with_bold = context.replace(date_text, f"<strong>{date_text}</strong>", 1)
+            
             date_mentions_html += "<tr>"
             date_mentions_html += f"<td>{unit_link}</td>"
-            date_mentions_html += f"<td><strong>{date_text}</strong><br/><em style='color: #666;'>{context}</em></td>"
+            date_mentions_html += f"<td><em style='color: #333;'>{context_with_bold}</em></td>"
             date_mentions_html += "</tr>"
-        date_mentions_html += "</table>"
+        
+        date_mentions_html += "</tbody></table>"
     else:
         date_mentions_html += "<h3>⚠️ Date Mentions in Text</h3>"
         date_mentions_html += "<p>✅ No out-of-range date mentions found in text</p>"
