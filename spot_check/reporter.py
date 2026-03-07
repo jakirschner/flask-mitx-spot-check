@@ -2,19 +2,22 @@ from datetime import datetime, timezone
 from spot_check.checkers import (
     check_broken_links,
     find_edx_mentions,
+    find_draft_units,
     find_fbe_gating,
+    find_staff_only_content,
     check_release_dates,
     find_date_mentions,
     find_ora_dates,
     find_videos,
     find_discussions_issues,
     find_course_updates_issues,
-    find_unit_visibility_issues,
 )
 from spot_check.reporters import (
     generate_broken_links_html,
     generate_edx_mentions_html,
+    generate_draft_units_html,
     generate_fbe_settings_html,
+    generate_staff_only_html,
     generate_release_dates_html,
     generate_date_mentions_html,
     generate_ora_dates_html,
@@ -23,7 +26,6 @@ from spot_check.reporters import (
     generate_course_updates_html,
     generate_membership_roles_html,
     generate_grading_policy_html,
-    generate_unit_visibility_html,
 )
 
 
@@ -53,27 +55,29 @@ def generate_html_report(course_info, course_dir):
     # Run all checks
     broken_links = check_broken_links(course_dir, course_info)
     edx_mentions = find_edx_mentions(course_dir, course_info)
+    draft_units = find_draft_units(course_dir, course_info)
     fbe_settings = find_fbe_gating(course_dir, course_info)
+    staff_only_content = find_staff_only_content(course_dir, course_info)
     release_dates_result = check_release_dates(course_dir, course_info)
     date_mentions = find_date_mentions(course_dir, course_info)
     ora_dates = find_ora_dates(course_dir, course_info)
     videos = find_videos(course_dir, course_info)
     discussions_info = find_discussions_issues(course_dir, course_info)
     course_updates = find_course_updates_issues(course_dir, course_info)
-    unit_visibility = find_unit_visibility_issues(course_dir, course_info)
     
     # Count issues for tab badges
-    links_issues = len(broken_links)
-    content_issues = len(edx_mentions) + len(unit_visibility)
-    dates_issues = len(release_dates_result.get('flagged_dates', [])) + len(date_mentions) + len(ora_dates)
+    content_issues = len(broken_links) + len(edx_mentions) + len(draft_units) + len(staff_only_content)
+    dates_issues = len(release_dates_result) + len(date_mentions) + len(ora_dates)
     video_issues = len(videos)
     settings_issues = len(discussions_info['flags']) if isinstance(discussions_info, dict) else 0
     settings_issues += len(course_updates)
-
+    
     # Generate HTML for each section
     broken_links_html = generate_broken_links_html(broken_links)
     edx_mentions_html = generate_edx_mentions_html(edx_mentions)
+    draft_units_html = generate_draft_units_html(draft_units)
     fbe_settings_html = generate_fbe_settings_html(fbe_settings, course_info)
+    staff_only_html = generate_staff_only_html(staff_only_content)
     release_dates_html = generate_release_dates_html(release_dates_result, course_info)
     date_mentions_html = generate_date_mentions_html(date_mentions)
     ora_dates_html = generate_ora_dates_html(ora_dates, course_info)
@@ -82,9 +86,6 @@ def generate_html_report(course_info, course_dir):
     course_updates_html = generate_course_updates_html(course_updates, course_info)
     membership_roles_html = generate_membership_roles_html(course_info)
     grading_policy_html = generate_grading_policy_html(course_info)
-    unit_visibility_html = generate_unit_visibility_html(unit_visibility, course_info)
-    
-    links_badge = f"<span class='tab-badge {'critical' if links_issues > 0 else 'none'}'>{links_issues}</span>" if links_issues > 0 else ""
     
     # Build tab badge HTML
     content_badge = f"<span class='tab-badge {'critical' if content_issues > 0 else 'none'}'>{content_issues}</span>" if content_issues > 0 else ""
@@ -433,10 +434,6 @@ def generate_html_report(course_info, course_dir):
             <button class="tab-button" role="tab" aria-selected="false" aria-controls="always-check" onclick="openTab(event, 'always-check')">
                 Always Check These!
             </button>
-            <button class="tab-button" role="tab" aria-selected="false" aria-controls="links" onclick="openTab(event, 'links')">
-                Links
-                {links_badge}
-            </button>
             <button class="tab-button" role="tab" aria-selected="false" aria-controls="content" onclick="openTab(event, 'content')">
                 Course Content
                 {content_badge}
@@ -464,25 +461,23 @@ def generate_html_report(course_info, course_dir):
                 {grading_policy_html}
             </div>
         </section>
-
-        <section id="links" class="tab-content" role="tabpanel" aria-labelledby="links-tab">
-            <h2>Links</h2>
-            <div class="checker-section">
-                {broken_links_html}
-            </div>
-        </section>
         
         <section id="content" class="tab-content" role="tabpanel" aria-labelledby="content-tab">
             <h2>Course Content</h2>
-            
+            <div class="checker-section">
+                {broken_links_html}
+            </div>
+            <div class="checker-section">
+                {edx_mentions_html}
+            </div>
+            <div class="checker-section">
+                {draft_units_html}
+            </div>
             <div class="checker-section">
                 {fbe_settings_html}
             </div>
             <div class="checker-section">
-                {unit_visibility_html}
-            </div>
-            <div class="checker-section">
-                {edx_mentions_html}
+                {staff_only_html}
             </div>
         </section>
         

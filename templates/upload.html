@@ -275,7 +275,7 @@
             <div class="status-container" id="statusContainer">
                 <h4><span class="spinner"></span>Processing Your Course</h4>
                 <div class="status-message" id="statusMessage">
-                    Connecting to server...
+                    Extracting course files...
                 </div>
             </div>
             
@@ -297,29 +297,29 @@
     <script>
         let reportUrl = null;
         let reportFilename = null;
-        let eventSource = null;
         
-        // Connect to SSE endpoint for real-time progress updates
-        function connectToProgress() {
-            eventSource = new EventSource('/progress');
-            
-            eventSource.onmessage = function(event) {
-                const statusMsg = document.getElementById('statusMessage');
-                statusMsg.textContent = event.data;
-            };
-            
-            eventSource.onerror = function() {
-                if (eventSource.readyState === EventSource.CLOSED) {
-                    console.log('Progress connection closed');
-                }
-            };
-        }
+        const statusMessages = [
+            "Extracting course files...",
+            "Parsing course structure...",
+            "Checking for broken links...",
+            "Scanning for edX mentions...",
+            "Checking video properties...",
+            "Analyzing course dates...",
+            "Checking course settings...",
+            "Generating report...",
+            "Finalizing results..."
+        ];
         
-        // Close the SSE connection
-        function closeProgress() {
-            if (eventSource) {
-                eventSource.close();
-                eventSource = null;
+        let messageIndex = 0;
+        let messageInterval = null;
+        
+        function updateStatus() {
+            const statusMsg = document.getElementById('statusMessage');
+            if (messageIndex < statusMessages.length) {
+                statusMsg.textContent = statusMessages[messageIndex];
+                messageIndex++;
+            } else {
+                messageIndex = 0;
             }
         }
         
@@ -340,8 +340,10 @@
             document.getElementById('statusContainer').style.display = 'block';
             document.getElementById('uploadBtn').disabled = true;
             
-            // Connect to progress updates
-            connectToProgress();
+            // Start status updates
+            messageIndex = 0;
+            updateStatus();
+            messageInterval = setInterval(updateStatus, 3000);
             
             // Prepare form data
             const formData = new FormData();
@@ -364,16 +366,14 @@
                 // Get filename from custom header
                 reportFilename = response.headers.get('X-Filename') || 'spot_check_report.html';
                 
-                // Close progress connection
-                closeProgress();
-                
                 // Show results
+                clearInterval(messageInterval);
                 document.getElementById('statusContainer').style.display = 'none';
                 document.getElementById('resultsContainer').style.display = 'block';
                 document.getElementById('uploadBtn').disabled = false;
                 
             } catch (error) {
-                closeProgress();
+                clearInterval(messageInterval);
                 showError(`Error: ${error.message}`);
                 document.getElementById('statusContainer').style.display = 'none';
                 document.getElementById('uploadBtn').disabled = false;
@@ -402,6 +402,7 @@
             const errorMessage = document.getElementById('errorMessage');
             errorMessage.textContent = message;
             errorContainer.style.display = 'block';
+            clearInterval(messageInterval);
             document.getElementById('statusContainer').style.display = 'none';
             document.getElementById('uploadBtn').disabled = false;
         }
