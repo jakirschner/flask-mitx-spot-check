@@ -87,7 +87,7 @@ def find_external_links(course_dir):
     return links
 
 
-def check_link_status(url, timeout=5):
+def check_link_status(url, timeout=2):
     """
     Check if a link is valid.
     Returns a dict with status, code, and reason.
